@@ -1,0 +1,24 @@
+# CrewGate Plugin Configuration
+pipeline:
+  gates:
+    - id: ceo
+      name: Strategic Approval
+      persona: personas/ceo.md
+    - id: cto
+      name: Architectural Review
+      persona: personas/cto-archi.md
+    - id: techlead
+      name: Design Validation
+      persona: personas/techlead.md
+    - id: developer
+      name: Implementation
+      persona: personas/developer.md
+    - id: qa
+      name: Quality Assurance
+      persona: personas/qa.md
+    - id: security
+      name: Security Audit
+      persona: personas/security.md
+    - id: release
+      name: Release Authorization
+      persona: personas/release.md
