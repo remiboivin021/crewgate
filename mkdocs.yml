@@ -40,6 +40,8 @@ nav:
           - Code Ports: architecture/c4/code-ports.md
           - Code Adapters: architecture/c4/code-adapters.md
           - Code Cross-Cutting: architecture/c4/code-cross-cutting.md
+  - API:
+      - Overview: api/index.md
   - Governance:
       - ADRs: governance/adr/index.md
 

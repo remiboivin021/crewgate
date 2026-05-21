@@ -1,0 +1,15 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src"],
+  "entryPointStrategy": "expand",
+  "out": "docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "hideBreadcrumbs": false,
+  "hidePageTitle": false,
+  "entryFileName": "index.md",
+  "name": "CrewGate API Documentation",
+  "includeVersion": true,
+  "excludeExternals": true,
+  "readme": "none",
+  "blockTags": ["@initialis", "@author", "@param", "@returns", "@file", "@brief"]
+}
