@@ -1,0 +1,52 @@
+{
+  "name": "crewgate",
+  "version": "0.1.0",
+  "description": "CrewGate — 7-gate pipeline with adversarial mirror, prediction market, and fidelity validation",
+  "entrypoint": "crewgate",
+  "commands": [
+    {
+      "name": "feat",
+      "subcommands": ["new", "list", "edit"],
+      "description": "Manage features (create, list, edit scope)"
+    },
+    {
+      "name": "run",
+      "description": "Execute the full pipeline for a feature"
+    },
+    {
+      "name": "status",
+      "description": "Show pipeline state"
+    },
+    {
+      "name": "show",
+      "description": "Show feature scope in human-readable format"
+    },
+    {
+      "name": "resume",
+      "description": "Resume from last checkpoint"
+    },
+    {
+      "name": "cancel",
+      "description": "Gracefully cancel a running feature"
+    },
+    {
+      "name": "rollback",
+      "description": "Destructive rollback to pre-dev checkpoint"
+    },
+    {
+      "name": "log",
+      "description": "Show telemetry log for a feature"
+    },
+    {
+      "name": "benchmark",
+      "description": "Run benchmark against pipeline config"
+    }
+  ],
+  "permissions": [
+    "git:read",
+    "git:write",
+    "fs:read:.crewgate",
+    "fs:write:.crewgate"
+  ],
+  "hooks": []
+}

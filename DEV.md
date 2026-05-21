@@ -61,6 +61,10 @@ crewgate/
 │   ├── engineering/      # Standards, tooling, testing
 │   ├── governance/       # Constitution, levels, workflows, ADRs
 │   └── ...
+├── specs/                # NLSpec specifications
+├── AGENTS.md             # OpenCode routing + config
+├── AGENTS.override.md    # Project-specific overrides
+├── .opencode/            # OpenCode skills and constitution
 └── mkdocs.yml            # Documentation site config
 ```
 
@@ -85,6 +89,7 @@ This repository uses a governed multi-agent pipeline. Every feature change follo
 
 1. Create a worktree: `git worktree add ../wt-feat -b feature/my-thing`
 2. Work inside it, never on main/develop
+3. OpenCode handles triage → planner → gates → preflight → coder → QA → review
 4. One task = one commit
 5. Run `mkdocs build --strict` and `bun test` before merging
 
@@ -92,6 +97,10 @@ This repository uses a governed multi-agent pipeline. Every feature change follo
 
 | Topic | Where |
 |-------|-------|
+| Governance pipeline | `docs/governance/quickstart.md` |
+| Change levels (L1/L2/L3) | `docs/governance/levels.md` |
+| Execution flows | `docs/governance/workflows.md` |
+| OpenCode config | `docs/engineering/tooling/opencode/` |
 | Testing conventions | `docs/engineering/tooling/testing/` |
 | Documentation rules | `docs/engineering/tooling/documentation-rules.md` |
 | Git workflow | `GIT.md` |

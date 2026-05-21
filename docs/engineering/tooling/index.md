@@ -16,6 +16,11 @@
 - **Mermaid** and **PlantUML** for diagrams
 - **TypeDoc** for API documentation
 
+## AI & Governance
+
+- **OpenCode** for AI-agent governance and orchestration
+- **Cupcake** (Rego/Wasm) for policy enforcement (planned)
+
 ## Pages
 
 ### [build.md](build.md)
@@ -32,6 +37,18 @@ Test strategy split across two files:
 ### [documentation-rules.md](documentation-rules.md)
 
 Rules for maintaining the project documentation — MkDocs structure, diagram conventions, review process. (Template stub.)
+
+### [opencode/](opencode/index.md)
+
+How OpenCode is configured and used in the CrewGate project:
+
+- **Project config** — AGENTS.md, AGENTS.override.md, constitution
+- **Skills** — all 14 skills with descriptions and veto rights
+- **Working artifacts** — STATE, TODO, DECISIONS files
+- **Execution flows** — feature, bugfix, structural, security-sensitive
+- **Practical workflow** — triage → preflight → coder → qa → review → release
+- **Commit discipline** — format, hard gates, one task = one commit
+- **Rules** — minimal change, no opportunistic refactor, scope discipline, drift, precedence
 
 ---
 

@@ -18,7 +18,11 @@ System overview, hexagonal pattern, interfaces & contracts, data flow, deploymen
 
 ### [Governance](governance/index.md)
 
-Quickstart for safe operation  and Architecture Decision Records (ADR).
+Constitution, change levels (L1-L3), canonical execution workflows, quickstart for safe operation, and Architecture Decision Records (ADR).
+
+### [Context](context/product_context.md)
+
+Product identity and scope, technical stack (TypeScript/Bun/hexagonal), constraints, and AI agent context.
 
 ---
 
