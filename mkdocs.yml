@@ -1,0 +1,64 @@
+site_name: CrewGate Documentation
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: deep purple
+    accent: indigo
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - User Guide:
+      - User Guide:
+          - Overview: engineering/user-guide/index.md
+          - Installation: engineering/user-guide/installation.md
+          - Quick Start: engineering/user-guide/quickstart.md
+          - CLI Reference: engineering/user-guide/cli.md
+          - Pipeline & Gates: engineering/user-guide/pipeline.md
+          - Personas: engineering/user-guide/personas.md
+          - Behaviors: engineering/user-guide/behaviors.md
+          - Routing: engineering/user-guide/routing.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Modularity Principles: architecture/modularity-principles.md
+      - Data Flow: architecture/data-flow.md
+      - Security: architecture/security-architecture.md
+      - Deployment: architecture/deployment.md
+      - Interfaces: architecture/interfaces.md
+      - C4 Models:
+          - Overview: architecture/c4/index.md
+          - Context: architecture/c4/context.md
+          - Container: architecture/c4/container.md
+          - Component: architecture/c4/component.md
+          - Component Runtime: architecture/c4/component-runtime.md
+          - Code Domain: architecture/c4/code-domain.md
+          - Code Orchestrator: architecture/c4/code-orchestrator.md
+          - Code Ports: architecture/c4/code-ports.md
+          - Code Adapters: architecture/c4/code-adapters.md
+          - Code Cross-Cutting: architecture/c4/code-cross-cutting.md
+  - Governance:
+      - ADRs: governance/adr/index.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - plantuml_markdown:
+      server: https://www.plantuml.com/plantuml
+      format: svg
+
+extra_css:
+  - assets/stylesheets/nav.css
+
+extra_javascript:
+  - assets/javascripts/zoom.js

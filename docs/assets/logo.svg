@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="gateFlowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="60%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#C084FC" />
+    </linearGradient>
+    
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#111827" />
+      <stop offset="100%" stop-color="#0B0F19" />
+    </linearGradient>
+  </defs>
+
+  <polygon points="200,30 350,115 350,285 200,370 50,285 50,115" fill="url(#bgGrad)" stroke="#1E293B" stroke-width="4" />
+
+  <g transform="translate(200, 200)">
+    <path d="M -90,0 A 90,90 0 1,1 90,0 A 90,90 0 1,1 -90,0 Z" fill="none" stroke="url(#gateFlowGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="25 15" />
+    
+    <g transform="rotate(-90)" fill="#64748B">
+      <circle cx="0" cy="-90" r="10" />
+      <path d="M 0,-90 l -10,10 l 20,0 Z" transform="translate(0, 10)" />
+      <path d="M 0,-90 l -5,15 l 10,-5 l -5,-10 Z" transform="rotate(180 0 -90) translate(0, 10)" />
+    </g>
+    
+    <g transform="scale(0.8)">
+      <polygon points="0,-60 52,-30 52,30 0,60 -52,30 -52,-30" fill="#1E293B" stroke="url(#gateFlowGrad)" stroke-width="6" />
+      <path d="M 0,-25 L 18,-15 V 10 L 0,20 L -18,10 V -15 Z" fill="#38BDF8" /> </g>
+  </g>
+</svg>
