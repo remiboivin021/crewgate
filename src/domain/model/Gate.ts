@@ -9,16 +9,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Representation of a validation step in the pipeline
- *
- * @initialis 2026/05/21
- * @author Remi Boivin
- */
+export type GateId =
+  | "ceo"
+  | "cto"
+  | "techlead"
+  | "developer"
+  | "qa"
+  | "security"
+  | "release";
+
 export interface Gate {
-  id: string;
+  id: GateId;
   name: string;
-  persona: string;
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
+  personaPath: string;
+  behaviorPath: string;
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED";
   output?: string;
 }

@@ -9,15 +9,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+export type PipelineFlow = "bugfix" | "feature" | "structural" | "security";
+export type PipelineLevel = 0 | 1 | 2 | 3 | 4;
+export type FeatureStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "FAILED";
+
 /**
- * Representation of a feature or change to be processed
- *
- * @initialis 2026/05/21
- * @author Remi Boivin
+ * Representation of a feature or change to be processed.
  */
 export interface Feature {
   id: string;
+  slug: string;
   title: string;
   description: string;
   branch?: string;
+  createdAt: string;
+  updatedAt: string;
+  status: FeatureStatus;
+  currentGate?: string | null;
+  completedGates: string[];
+  artifactsRoot: string;
+  level?: PipelineLevel;
+  flow?: PipelineFlow;
+  lastError?: string;
 }

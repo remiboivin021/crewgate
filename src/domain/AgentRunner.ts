@@ -9,25 +9,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Gate } from './model/Gate';
-import { ILLMPort } from '../ports/outbound/ILLMPort';
+import { existsSync, readFileSync } from "fs";
+import { join } from "path";
+import type { ILLMPort } from "../ports/outbound/ILLMPort";
+import type { Feature } from "./model/Feature";
+import type { Gate } from "./model/Gate";
 
-/**
- * Execution of an agent with its persona
- *
- * @initialis 2026/05/21
- * @author Remi Boivin
- */
 export class AgentRunner {
-  constructor(private llmPort: ILLMPort) {}
+  constructor(
+    private readonly llmPort: ILLMPort,
+    private readonly repoRoot: string = process.cwd(),
+  ) {}
 
-  /**
-   * Executes a gate via an LLM agent
-   * @param gate - The gate to execute
-   * @returns {Promise<string>} The execution result
-   */
-  async run(gate: Gate): Promise<string> {
-    // TODO: Charger la persona et exécuter via LLM
-    return "";
+  async run(gate: Gate, feature: Feature, upstreamArtifacts: string[]): Promise<string> {
+    const personaPath = join(this.repoRoot, gate.personaPath);
+    const behaviorPath = join(this.repoRoot, gate.behaviorPath);
+
+    if (!existsSync(personaPath)) {
+      throw new Error(`MISSING_PERSONA: ${gate.id}`);
+    }
+
+    if (!existsSync(behaviorPath)) {
+      throw new Error(`MISSING_BEHAVIOR: ${gate.id}`);
+    }
+
+    const persona = readFileSync(personaPath, "utf-8").trim();
+    const behavior = readFileSync(behaviorPath, "utf-8").trim();
+    const prompt = [
+      `gate=${gate.id}`,
+      `title=${feature.title}`,
+      `description=${feature.description}`,
+      `persona=${persona}`,
+      `behavior=${behavior}`,
+      `upstream=${upstreamArtifacts.join("\n") || "none"}`,
+    ].join("\n");
+
+    const completion = await this.llmPort.complete(prompt);
+    return JSON.stringify({
+      gate: gate.id,
+      title: feature.title,
+      level: feature.level ?? null,
+      flow: feature.flow ?? null,
+      completion,
+    });
   }
 }

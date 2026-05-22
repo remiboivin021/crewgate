@@ -9,29 +9,73 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Manages the pipeline state (current gate, outputs)
- *
- * @initialis 2026/05/21
- * @author Remi Boivin
- */
-export class StateManager {
-  private currentState: any = {};
+import { mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "fs";
+import { dirname, join } from "path";
+import type { Feature } from "./model/Feature";
 
-  /**
-   * Retrieves the current state
-   * @returns {any}
-   */
-  getCurrentState(): any {
-    return this.currentState;
+export class StateManager {
+  constructor(private readonly stateRoot: string = join(process.cwd(), ".crewgate", "state")) {
+    mkdirSync(this.stateRoot, { recursive: true });
   }
 
-  /**
-   * Updates the state for a given gate
-   * @param gateId - Gate identifier
-   * @param result - Result to record
-   */
-  updateState(gateId: string, result: any): void {
-    this.currentState[gateId] = result;
+  getCurrentState(slug?: string): Feature | Feature[] | null {
+    return slug ? this.load(slug) : this.list();
+  }
+
+  create(feature: Feature): Feature {
+    this.save(feature);
+    return feature;
+  }
+
+  load(slug: string): Feature {
+    const path = this.getStatePath(slug);
+    const parsed = JSON.parse(readFileSync(path, "utf-8")) as Feature;
+    this.assertValid(parsed);
+    return parsed;
+  }
+
+  list(): Feature[] {
+    return readdirSync(this.stateRoot)
+      .filter((entry: string) => entry.endsWith(".json"))
+      .map((entry: string) => this.load(entry.replace(/\.json$/, "")));
+  }
+
+  save(feature: Feature): void {
+    this.assertValid(feature);
+    const path = this.getStatePath(feature.slug);
+    mkdirSync(dirname(path), { recursive: true });
+    const tmpPath = `${path}.tmp`;
+    writeFileSync(tmpPath, JSON.stringify(feature));
+    renameSync(tmpPath, path);
+  }
+
+  updateState(feature: Feature, patch: Partial<Feature>): Feature {
+    const updated: Feature = {
+      ...feature,
+      ...patch,
+      updatedAt: new Date().toISOString(),
+    };
+    this.save(updated);
+    return updated;
+  }
+
+  private getStatePath(slug: string): string {
+    return join(this.stateRoot, `${slug}.json`);
+  }
+
+  private assertValid(feature: Feature): void {
+    const required = [
+      feature.id,
+      feature.slug,
+      feature.title,
+      feature.description,
+      feature.createdAt,
+      feature.updatedAt,
+      feature.status,
+      feature.artifactsRoot,
+    ];
+    if (required.some((value) => !value) || !Array.isArray(feature.completedGates)) {
+      throw new Error("INVALID_STATE");
+    }
   }
 }

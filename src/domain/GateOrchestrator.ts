@@ -9,47 +9,96 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Feature } from './model/Feature';
-import { StateManager } from './StateManager';
-import { AgentRunner } from './AgentRunner';
-import { PolicyEngine } from './PolicyEngine';
+import { join } from "path";
+import { ScopedArtifactPort } from "../adapters/outbound/ScopedArtifactPort";
+import type { Feature } from "./model/Feature";
+import type { Gate, GateId } from "./model/Gate";
+import { AgentRunner } from "./AgentRunner";
+import { DynamicRouter } from "./DynamicRouter";
+import { StateManager } from "./StateManager";
 
-/**
- * Orchestrates the sequence CEO→CTO→TL→Dev→QA→Sec→Release
- *
- * @initialis 2026/05/21
- * @author Remi Boivin
- */
 export class GateOrchestrator {
   constructor(
-    private stateManager: StateManager,
-    private agentRunner: AgentRunner,
-    private policyEngine: PolicyEngine
+    private readonly stateManager: StateManager,
+    private readonly agentRunner: AgentRunner,
+    private readonly router: DynamicRouter,
+    private readonly artifactsRoot: string = join(process.cwd(), ".crewgate", "artifacts"),
   ) {}
 
-  /**
-   * Starts the pipeline execution for a feature
-   * @param feature - The feature to process
-   * @returns {Promise<void>}
-   */
-  async run(feature: Feature): Promise<void> {
-    // TODO: Implement the sequence CEO→CTO→TL→Dev→QA→Sec→Release
+  async run(feature: Feature): Promise<Feature> {
+    const classification = feature.level !== undefined && feature.flow
+      ? { level: feature.level, flow: feature.flow }
+      : this.router.classify(feature);
+
+    let current = this.stateManager.updateState(feature, {
+      level: classification.level,
+      flow: classification.flow,
+      status: "IN_PROGRESS",
+      currentGate: null,
+    });
+
+    for (const gateId of this.getGateSequence(classification.level, classification.flow)) {
+      if (current.completedGates.includes(gateId)) {
+        continue;
+      }
+
+      const gate = this.makeGate(gateId);
+      current = this.stateManager.updateState(current, { currentGate: gateId });
+      const artifacts = new ScopedArtifactPort(
+        this.artifactsRoot,
+        current.slug,
+        gateId,
+        current.completedGates,
+      );
+      const upstreamArtifacts = await Promise.all(
+        current.completedGates.map(async (completedGate) => {
+          try {
+            return await artifacts.read("artifact.txt");
+          } catch {
+            return completedGate;
+          }
+        }),
+      );
+      const output = await this.agentRunner.run(gate, current, upstreamArtifacts);
+      await artifacts.write("artifact.txt", output);
+      current = this.stateManager.updateState(current, {
+        completedGates: [...current.completedGates, gateId],
+      });
+    }
+
+    return this.stateManager.updateState(current, {
+      status: "COMPLETED",
+      currentGate: null,
+    });
   }
 
-  /**
-   * Resumes execution from a specific gate
-   * @param gateId - The identifier of the gate
-   * @returns {Promise<void>}
-   */
-  async resume(gateId: string): Promise<void> {
-    // TODO: Resume from a specific gate
+  async resume(slug: string): Promise<Feature> {
+    const feature = this.stateManager.load(slug);
+    return this.run(feature);
   }
 
-  /**
-   * Retrieves the current state of the pipeline
-   * @returns {any}
-   */
-  getStatus(): any {
-    return this.stateManager.getCurrentState();
+  getStatus(slug?: string): Feature | Feature[] | null {
+    return this.stateManager.getCurrentState(slug);
+  }
+
+  private getGateSequence(level: number, flow: string): GateId[] {
+    if (flow === "bugfix" && level <= 1) {
+      return ["ceo", "developer", "qa", "release"];
+    }
+    if (level <= 2) {
+      return ["ceo", "cto", "techlead", "developer", "qa", "release"];
+    }
+    return ["ceo", "cto", "techlead", "developer", "qa", "security", "release"];
+  }
+
+  private makeGate(id: GateId): Gate {
+    const personaPath = id === "cto" ? "personas/cto-archi.md" : `personas/${id}.md`;
+    return {
+      id,
+      name: id,
+      personaPath,
+      behaviorPath: `behaviors/${id}.yaml`,
+      status: "PENDING",
+    };
   }
 }
