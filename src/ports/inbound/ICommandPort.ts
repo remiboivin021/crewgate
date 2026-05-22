@@ -33,5 +33,5 @@ export interface ICommandPort {
   /**
    * Retrieves the status
    */
-  status(): any;
+  status(slug?: string): any;
 }

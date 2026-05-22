@@ -9,9 +9,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { ICommandPort } from '../../ports/inbound/ICommandPort';
-import { Feature } from '../../domain/model/Feature';
-import { GateOrchestrator } from '../../domain/GateOrchestrator';
+import type { ICommandPort } from "../../ports/inbound/ICommandPort";
+import type { Feature } from "../../domain/model/Feature";
+import { GateOrchestrator } from "../../domain/GateOrchestrator";
 
 /**
  * Implements ICommandPort via opencode hooks
@@ -27,7 +27,7 @@ export class OpenCodeCliAdapter implements ICommandPort {
    * @param feature - Feature to process
    */
   async run(feature: Feature): Promise<void> {
-    return this.orchestrator.run(feature);
+    await this.orchestrator.run(feature);
   }
 
   /**
@@ -35,13 +35,13 @@ export class OpenCodeCliAdapter implements ICommandPort {
    * @param gateId - Step identifier
    */
   async resume(gateId: string): Promise<void> {
-    return this.orchestrator.resume(gateId);
+    await this.orchestrator.resume(gateId);
   }
 
   /**
    * Retrieves the current orchestrator status
    */
-  status(): any {
-    return this.orchestrator.getStatus();
+  status(slug?: string): any {
+    return this.orchestrator.getStatus(slug);
   }
 }

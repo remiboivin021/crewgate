@@ -4,6 +4,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
+    "types": ["bun"],
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "exactOptionalPropertyTypes": false,
@@ -15,6 +16,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
+    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@ports/*": ["src/ports/*"],
